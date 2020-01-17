@@ -1,3 +1,4 @@
+# JDBC相关
 ##### 1 mvn Spring pom
 ##### 4 Spring-Example
 ##### 5 单数据源
@@ -108,3 +109,55 @@
 		    }
 	} 
 
+##### 9 Spring 的事务抽象
+
++ JDBC、Hibernate/myBatis
++ DataSource/JTA
+
+##### 11 基于注解的配置方式
+
+开启事务注解的方式
+
++ @EnableTransactionManagement  //注解开启事务
++ <tx:annotation-driven>        //xml开启事务
+
+一些配置
+
++ proxyTargetClass //基于接口的还是基于类的，有接口使用这种方式(true/false)
++ mode AOP mode选择 默认Java类就好
++ order AOP 拦截的顺序 - 默认最低优先级（自己做的AOP拦截会在事务启动后执行）
+
+@Transcational
+
++ transactionManager /DatasourceTransactionManager
++ propagation //传播性
++ isolation   //隔离型
++ timeout     //超时
++ readOnly    //只读
++ 怎么判断回滚   
+
+
+基于注解的配置方式
+![](./Resource/Transaction.png)
+
+###### 编程式事务
+
+![](./Resource/ProgrammaticTransaction.png)
+
+example -> 11.ProgrammaticTransactionDemo
+
+###### 声明式事务
+
+![](./Resource/Declarativtransaction.png)
+
+example -> 11.DeclarativeTransaction
+
+	((FooService) (AopContext.currentProxy())).insertThenRollBack();
+
+##### 12 Spring的JDBC异常抽象
+
+![](./Resource/JDBC_Exception.png)
+
+![](./Resource/JDBC_Exception_Code.png)
+
+![](./Resource/JDBC_Exception_Custom_code.png)
