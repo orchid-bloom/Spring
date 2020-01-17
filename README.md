@@ -161,3 +161,43 @@ example -> 11.DeclarativeTransaction
 ![](./Resource/JDBC_Exception_Code.png)
 
 ![](./Resource/JDBC_Exception_Custom_code.png)
+
+###### 整理笔记📒
+Spring 的常用注解
+
+####### Java Config的相关注解
++ @Configuration    //标记当前类是Java配置类
++ @ImportResource   //配置以外的xml文件信息注入
++ @ComponentScan   //Spring容器扫描哪一些package下的Bean配置
++ @Bean //在一个Java Config 的类当中，方法被Bean标记返回一个Bean的配置，存在于Application Context中
++ @ConfigurationProperties //将配置绑定进来，方便使用配置
+
+####### 定义相关注解
++ @Component (通用注解通用Bean)
++ @Repository（数据库操作）
++ @Service（业务的服务）
++ @Controller (Spring MVC)
++ @RestController (Response + Controller Rest For Service)
++ @RequestMapping 方法在那些URL下的映射
+
+####### 注入相关注解
++ @Autowired  
++ @Qualifier  按照类型查找注入进来，可以指定名字
++ @Resource   根据名字进行注入
++ @Value      注入常量或者表达式
+
+####### Actuator 提供的Endpoint
+
+	/actuator/health  健康检查
+	/actuator/bean    查看容器中所有的Beans
+	/actuator/mapping 查看Web的URL映射
+	/actuator/env     查看环境
+
+默认是/actuator/health和/actuator/info可以访问，其他的需要开启
+
+	management.endpoints.web.exposure.include=*
+	或者指定多个
+	management.endpoints.web.exposure.include=health,bean
+
+	
+！！！！！生产环境需要谨慎	
