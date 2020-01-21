@@ -165,14 +165,14 @@ example -> 11.DeclarativeTransaction
 ###### 整理笔记📒
 Spring 的常用注解
 
-####### Java Config的相关注解
+###### Java Config的相关注解
 + @Configuration    //标记当前类是Java配置类
 + @ImportResource   //配置以外的xml文件信息注入
 + @ComponentScan   //Spring容器扫描哪一些package下的Bean配置
 + @Bean //在一个Java Config 的类当中，方法被Bean标记返回一个Bean的配置，存在于Application Context中
 + @ConfigurationProperties //将配置绑定进来，方便使用配置
 
-####### 定义相关注解
+###### 定义相关注解
 + @Component (通用注解通用Bean)
 + @Repository（数据库操作）
 + @Service（业务的服务）
@@ -180,13 +180,13 @@ Spring 的常用注解
 + @RestController (Response + Controller Rest For Service)
 + @RequestMapping 方法在那些URL下的映射
 
-####### 注入相关注解
+###### 注入相关注解
 + @Autowired  
 + @Qualifier  按照类型查找注入进来，可以指定名字
 + @Resource   根据名字进行注入
 + @Value      注入常量或者表达式
 
-####### Actuator 提供的Endpoint
+###### Actuator 提供的Endpoint
 
 	/actuator/health  健康检查
 	/actuator/bean    查看容器中所有的Beans
@@ -237,3 +237,134 @@ Spring Boot
 ![](./Resource/Druid-w.png)
 
 Example --> 14.Druid-demo
+
+
+
+
+# O/R Mapping 相关
+
+JDBC是各种操作的基础，JPA是个规范，Hibernate是JPA的一种实现，Spring Data JPA用的是Hibernate，MyBatis是另一种ORM的框架，Hibernate不用自己手写SQL，但其实复杂的HQL写到最后跟写SQL也没啥大差别
+
+##### Spring Data JPA
+![](./Resource/DataRelationship.png)
+
+##### Hibernate
++ 一款开源的对象关系映射（Object / Relational / Mapping）框架
++ 屏幕底层数据库的各种细节
++ 解放双手👐，95%的数据存储工作解放
+
+![](./Resource/JPA.png)
+![](./Resource/SpringDATA.png)
+
+常用JAP注解
+
+实体
+
++ @Entity  实体
++ @MappedSupperclass 多个实体有父类
++ @Table(name) 实体与对应的表关联起来
+
+主键
+
++ @Id 表的主键
+   + GeneratedValue(strategy, generator) //主键的生成策略，生成器是什么
+   + @SequenceGenerator(name, sequenceName) //什么样的序列
+   
+映射
+
++ Column(name, nullable, length, insertable, updatable) //定义属性与表里面的映射关系（字段名、是否为空、长度，只能插入不能改、还是可以改）
++ @JoinTable(name), @JoinColumn(name)(关联的时候使用)
+
+关系（表的关系）
+
++ @OneToOne, @OneToMany, @ManyToOne, @ManyToMany
++ @OrderBy
+
+
+###### Project Lombok
+常用功能
+
++ @Getter / @Setter   
++ @ToString
++ @NoArgsConstructor / @RequiredArgsConstructor / @AllArgsContructor
++ Data
++ Builder
++ Slf4j / @CommonsLog / @Log4j2   
+
+
+
+###### 子类继承基类后，使用＠Data注解会有编辑器底色警告，告知你在生成hashcode等过程中，基类的内容不会被生成。此时，要添加@EqualsAndHashCode(callSuper=true)即可手动标记子类hash时要调用父类的hash方法对属于父类的部分内容生成哈希值。此时就不会报警告了。（包括下面那句@ToString(callSuper = true)也是一样）
+
+如果觉得此方式比较麻烦的话（每个类都要），可设置lombok的配置文件lombok.config来解决：
+　　
+①lombok.config文件需要放在src/main/java文件夹下的目录中（也可以放在实体同级目录下），其它位置无效。内容如下：
+　　
+
+	config.stopBubbling=true
+	lombok.equalsAndHashCode.callSuper=call
+		
+		
+②然后，在ｐｏｍ加入插件：
+　　      
+     
+	<plugin>
+	   <groupId>org.apache.maven.plugins</groupId>
+	   <artifactId>maven-compiler-plugin</artifactId>
+	   <configuration>
+	      <source>1.8</source>
+	      <target>1.8</target>
+	   </configuration>
+	</plugin>
+
+
+　　此时，可见@Data编辑器警告底色消失。
+
+
+###### @lombok.experimental.Accessors(chain = true) 取代 @lombok.Builder, setXXX方法也可以连着调用
+		
+		@Accessors(chain = true)
+		@Data
+		public class Coffee {
+		    private Long id;
+		    private String name;
+		}
+		
+		private void initOrders() {
+		final Coffee chain = new Coffee()
+		.setId(1L)
+		.setName("chain");
+	}
+
+
++ 是广泛使用门面日志库，使用动态查找机制在运行时发现真正的日志库，通过ClassLoader加载日志库，而OSGI中不同插件有不同的ClassLoader，每个线程执行时的ClassLoader都说是不同的，这种能力保证了各插件的相互独立，从而导致commons-logging在OSGI环境中无法正常使用，解决方案就是使用SLF4J
++ SLF4也是广泛使用的门面日志库，但是他是使用编译期静态绑定真正的日志库，通OSGI同时使用时不存在问题。
+
+Example --> 17.SpringBucks
+
+##### Repository
+
+@EnableJpaRepositories
+
+Repository<T,ID> 接口
+
++ CrudRespository<T, ID>
++ PagingAndSortingRepository<T, ID>
++ JpaRepository<T, ID>
+
+Example --> 18.Jpa-Demo
+
+##### 定义查询
+
++ find..By / read..By / query..By / get...By...  查找
++ count..By  计数定义
++ ..OrderBy...[Asc/ Desc] 查询返回有多个记录 排序返回
++ And / Or / IgnoreCase 多个条件
++ Top / First / Distinct 
+
+##### 分页查询
+
++ PagingAndSortingRepository<T, ID>
++ Pageable / Sort
++ Slice<T> / Page<T>
+
+Example --> 18-2.Jpa-Complex-Demo
