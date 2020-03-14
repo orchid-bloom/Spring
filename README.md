@@ -368,3 +368,28 @@ Example --> 18.Jpa-Demo
 + Slice<T> / Page<T>
 
 Example --> 18-2.Jpa-Complex-Demo
+
+### Repository Bean 的创建
+![](./Resource/Repository_Bean_Creat.png)
+
+
+
+##### 20.mymatis-demo 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
